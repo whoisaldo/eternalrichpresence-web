@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { LINKS, ROUTES } from '../lib/site';
+import { getReleases, formatSize } from '../lib/github';
+
+const data = await getReleases();
+const releasesPage = `${LINKS.github}/releases`;
+const description =
+  'Every build of EternalRichPresence, newest first — version, release notes, download, and SHA-256, pulled live from GitHub Releases.';
+---
+
+<Base title="Releases" path="/releases" description={description}>
+  <Nav active="releases" />
+  <main id="main">
+    <header class="page-hero">
+      <div class="hero-bg"><div class="red1"></div><div class="scrim2"></div></div>
+      <div class="wrap hero-in">
+        <a class="back-link" href={ROUTES.home}><Icon name="arrow-left" /> Back to home</a>
+        <span class="eyebrow" style="margin-top:18px;display:inline-block;">Changelog</span>
+        <h1>Releases</h1>
+        <p class="lede">
+          Every build of EternalRichPresence, newest first — read straight from
+          GitHub Releases, so this list is never out of date.
+        </p>
+      </div>
+    </header>
+
+    <section style="padding-top:32px;">
+      <div class="wrap">
+        {
+          data.available ? (
+            <div class="changelog">
+              {data.releases.map((r, idx) => (
+                <article class="changelog-item">
+                  <div class="rel-top">
+                    <div class="tag-row">
+                      <span class="ver">{r.tag}</span>
+                      {idx === 0 && <span class="badge latest">Latest</span>}
+                      {r.prerelease && <span class="badge pre">Pre-release</span>}
+                    </div>
+                    <span class="rel-date">{r.dateLabel}</span>
+                  </div>
+
+                  {r.name !== r.tag && <h2 class="cl-title">{r.name}</h2>}
+
+                  {r.bodyHtml ? (
+                    <div class="notes" set:html={r.bodyHtml} />
+                  ) : (
+                    <p class="notes">No release notes were provided for this build.</p>
+                  )}
+
+                  <div class="cl-meta">
+                    {r.download ? (
+                      <a class="btn btn-primary cl-download" href={r.download.url}>
+                        <Icon name="download-arrow" /> Download {r.download.name}
+                        {r.download.sizeBytes ? ` · ${formatSize(r.download.sizeBytes)}` : ''}
+                      </a>
+                    ) : (
+                      <a class="btn" href={r.htmlUrl} target="_blank" rel="noopener">
+                        <Icon name="github" /> View on GitHub
+                      </a>
+                    )}
+                    <a class="back-link" href={ROUTES.verify}>
+                      <Icon name="shield" /> How to verify
+                    </a>
+                  </div>
+
+                  {r.download?.sha256 && (
+                    <p class="checksum">SHA-256 · {r.download.sha256}</p>
+                  )}
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div class="changelog">
+              <article class="changelog-item">
+                <div class="rel-top">
+                  <div class="tag-row"><span class="ver">Coming soon</span></div>
+                  <span class="rel-date">no public build yet</span>
+                </div>
+                <p class="notes" style="margin-top:14px;">
+                  No releases have been published yet. When the first build is
+                  tagged on GitHub, it will appear here automatically — version,
+                  notes, download, and checksum, with no manual updates.
+                </p>
+                <div class="cl-meta">
+                  <a class="btn" href={releasesPage} target="_blank" rel="noopener">
+                    <Icon name="github" /> Watch releases on GitHub
+                  </a>
+                </div>
+              </article>
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

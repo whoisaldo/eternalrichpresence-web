@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Releases from '../components/Releases.astro';
+import Features from '../components/Features.astro';
+import Setup from '../components/Setup.astro';
+import Contributing from '../components/Contributing.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { LINKS } from '../lib/site';
+import { getChartTracks } from '../lib/apple';
+import { getReleases } from '../lib/github';
+
+// Build-time data (no client-side fetch → no CORS at runtime).
+const [tracks, releases] = await Promise.all([getChartTracks(), getReleases()]);
+---
+
+<Base title="Home" path="/">
+  <Nav active="home" downloadHref="#releases" />
+  <main id="main">
+    <Hero tracks={tracks} downloadHref="#releases" />
+    <Releases data={releases} />
+    <Features />
+    <Setup />
+    <Contributing />
+
+    <section class="band">
+      <div class="wrap">
+        <span class="eyebrow">Free · Source-available</span>
+        <h2>Put your music on your profile.</h2>
+        <p>
+          Download once, configure in a minute, forget it's running. It just
+          keeps your status honest.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#releases">
+            <Icon name="download" /> Download for Windows
+          </a>
+          <a class="btn" href={LINKS.github} target="_blank" rel="noopener">
+            <Icon name="github" /> Star on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

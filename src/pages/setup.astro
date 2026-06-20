@@ -1,0 +1,226 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { LINKS, ROUTES } from '../lib/site';
+import { getReleases } from '../lib/github';
+
+const data = await getReleases();
+const dl = data.latest?.download ?? null;
+const spotifyDashboard = 'https://developer.spotify.com/dashboard';
+
+const description =
+  'Set up EternalRichPresence in a few minutes — get a Discord Client ID from the Developer Portal, connect Spotify for Listen Along, and verify your download with SHA-256.';
+
+// Build the SHA-256 verification command with the real current filename.
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!,
+  );
+const fileName = dl?.name ?? 'EternalRichPresence.exe';
+const verifyCmdHtml = `<span class="tok-comment"># PowerShell — run this in the folder where you saved the download</span>\nGet-FileHash .\\${escapeHtml(fileName)} -Algorithm SHA256`;
+---
+
+<Base title="Setup guide" path="/setup" description={description}>
+  <Nav active="setup" downloadHref={ROUTES.releases} />
+  <main id="main">
+    <header class="page-hero">
+      <div class="hero-bg"><div class="red1"></div><div class="scrim2"></div></div>
+      <div class="wrap hero-in">
+        <a class="back-link" href={ROUTES.home}><Icon name="arrow-left" /> Back to home</a>
+        <span class="eyebrow" style="margin-top:18px;display:inline-block;">Setup</span>
+        <h1>Setup guide</h1>
+        <p class="lede">
+          From download to a live Discord status in a few minutes. No account and
+          no installer wizard — the first launch opens a small settings window and
+          walks you through it.
+        </p>
+      </div>
+    </header>
+
+    <section style="padding-top:24px;">
+      <div class="wrap">
+        <div class="prose">
+          <p>
+            EternalRichPresence is a single, portable Windows app. Official builds
+            already include the EternalRichPresence Discord application, so for most
+            people setup is just <strong>download → Save &amp; Launch → play</strong>.
+            The steps below cover the whole flow, including how to use your own
+            Discord application if you'd prefer.
+          </p>
+        </div>
+
+        <ol class="guide" style="list-style:none;padding:0;">
+          <li class="guide-step">
+            <span class="gn">1</span>
+            <div>
+              <h3>Download &amp; run</h3>
+              <p>
+                Grab the latest build from the
+                <a href={ROUTES.releases}>releases page</a> and run it. The first
+                launch opens the <strong>{`EternalRichPresence — Setup`}</strong>
+                window; after you save, the app lives in your system tray and updates
+                your status automatically while you listen.
+              </p>
+              <p>
+                Windows may show a SmartScreen warning because the build isn't
+                code-signed yet —
+                <a href="#smartscreen">here's why, and how to verify the download</a>.
+              </p>
+            </div>
+          </li>
+
+          <li class="guide-step">
+            <span class="gn">2</span>
+            <div>
+              <h3>Discord — already set up, or bring your own</h3>
+              <p>
+                Official releases come <strong>preconfigured</strong> with the
+                EternalRichPresence Discord application, so you can leave the Client
+                ID field as-is and just press <strong>Save &amp; Launch</strong>.
+              </p>
+              <p>
+                Prefer your status to run through <em>your own</em> Discord app (or
+                you're building from source)? Create one — it's free:
+              </p>
+              <p>
+                <strong>a.</strong> Open the
+                <a href={LINKS.discordDevPortal} target="_blank" rel="noopener">Discord Developer Portal</a>,
+                click <strong>New Application</strong>, name it, and accept the terms.<br />
+                <strong>b.</strong> On <strong>General Information</strong>, copy the
+                <strong>Application ID</strong> — that value is your
+                <span class="inline-code">Client ID</span>.<br />
+                <strong>c.</strong> Paste it into the Discord field in the setup
+                window. If you use your own app, add a Rich Presence art asset under
+                <strong>Rich Presence → Art Assets</strong> and make the asset key
+                match <span class="inline-code">apple_music</span> (the default) so
+                cover art falls back cleanly.<br />
+                <strong>d.</strong> Press <strong>Save &amp; Launch</strong>.
+              </p>
+            </div>
+          </li>
+
+          <li class="guide-step">
+            <span class="gn">3</span>
+            <div>
+              <h3>Connect Spotify <span style="color:var(--faint);font-weight:400;">(optional)</span></h3>
+              <p>
+                Spotify is optional, but adding it sharpens detection and unlocks
+                cross-service <strong>Listen Along</strong> playback. Create an app in
+                the <a href={spotifyDashboard} target="_blank" rel="noopener">Spotify Developer Dashboard</a>,
+                copy the <strong>Client ID</strong> and <strong>Client Secret</strong>,
+                set the redirect URI to
+                <span class="inline-code">http://localhost:8888/callback</span>, and
+                paste all three into the Spotify card.
+              </p>
+              <p>
+                Remote playback control (so friends can Listen Along on their own
+                Spotify) requires <strong>Spotify Premium</strong> and an active
+                Spotify device.
+              </p>
+            </div>
+          </li>
+
+          <li class="guide-step">
+            <span class="gn">4</span>
+            <div>
+              <h3>Play something</h3>
+              <p>
+                Start a track in Apple Music or Spotify. Your Discord profile lights
+                up with the cover, the title, and the live progress bar. To check on
+                things, right-click the tray icon — <strong>Debug → Open Log File</strong>
+                shows exactly what the app is doing.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="smartscreen">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow">Verifying your download</span>
+          <h2>Windows flagged it? Here's why — and how to verify.</h2>
+        </div>
+        <div class="prose">
+          <p>
+            When you run the download, Windows may show a blue
+            <strong>"Windows protected your PC"</strong> SmartScreen dialog, or your
+            browser may flag the file as "not commonly downloaded." That's expected:
+            EternalRichPresence is an independent, open project and the build isn't
+            <strong>code-signed</strong> yet. Code-signing certificates are expensive
+            and, even with one, SmartScreen distrusts new files until enough people
+            have downloaded them to build "reputation." An unsigned warning is a
+            statement about reputation — <em>not</em> a detection of malware.
+          </p>
+
+          <div class="callout info">
+            <Icon name="shield" />
+            <p>
+              You don't have to take that on faith. Every release publishes a
+              <strong>SHA-256</strong> checksum. Hash the file you downloaded and
+              compare — if it matches, you have the exact bytes that were built and
+              published, untampered.
+            </p>
+          </div>
+
+          <h3>Run it anyway (if you trust it)</h3>
+          <p>
+            If you've verified the file (below) and want to proceed, click
+            <strong>More info</strong> on the SmartScreen dialog, then
+            <strong>Run anyway</strong>. Only do this for files you downloaded
+            yourself from the
+            <a href={LINKS.github} target="_blank" rel="noopener">official GitHub repo</a>
+            or this site — never from a re-upload.
+          </p>
+
+          <h3>Verify the SHA-256</h3>
+          <p>
+            Open <strong>PowerShell</strong>, change to the folder where the file
+            landed, and run:
+          </p>
+          <div class="cmd" set:html={verifyCmdHtml}></div>
+          {
+            dl?.sha256 ? (
+              <>
+                <p>
+                  The current build (<span class="inline-code">{dl.name}</span>) should
+                  hash to:
+                </p>
+                <p class="checksum">{dl.sha256}</p>
+                <p>
+                  Compare it to the value above (the check is case-insensitive). The
+                  same digest is shown on the
+                  <a href={data.latest?.htmlUrl} target="_blank" rel="noopener">GitHub release</a>
+                  and on the <a href={ROUTES.releases}>releases page</a>. If every
+                  character matches, the download is authentic.
+                </p>
+              </>
+            ) : (
+              <p>
+                Compare the output to the SHA-256 shown on the
+                <a href={ROUTES.releases}>releases page</a> and on the
+                <a href={`${LINKS.github}/releases`} target="_blank" rel="noopener">GitHub release</a>.
+                If they match, the download is authentic.
+              </p>
+            )
+          }
+
+          <div class="callout warn-box">
+            <Icon name="warn" />
+            <p>
+              If the hash <strong>doesn't</strong> match, don't run the file — delete
+              it and download again from the official source. A mismatch means the
+              bytes changed in transit, or you grabbed it from somewhere unofficial.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

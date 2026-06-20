@@ -1,0 +1,25 @@
+# build output
+dist/
+.output/
+
+# astro
+.astro/
+
+# deps
+node_modules/
+
+# vercel
+.vercel/
+
+# logs / env
+*.log
+.env
+.env.production
+.DS_Store
+
+# os
+Thumbs.db
+
+# downloaded build-time fonts for asset generation (re-fetched on demand;
+# the generated PNGs under public/ are committed)
+scripts/fonts/

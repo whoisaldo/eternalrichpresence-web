@@ -12,7 +12,7 @@ export const SITE = {
     'EternalRichPresence mirrors Apple Music and Spotify to your Discord profile — real cover art, accurate progress, and Listen Along. A lightweight Windows tray app that stays out of your way.',
   author: 'whoisaldo',
   /** Production origin — also set as `site` in astro.config.mjs for absolute URLs. */
-  origin: 'https://eternalrichpresence.vercel.app',
+  origin: 'https://eternalrichpresence.dev',
   ogImage: '/og.png',
 } as const;
 

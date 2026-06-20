@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // `site` is the canonical origin used for absolute OG/canonical URLs and the
 // sitemap. Update it to the production domain when DNS is wired up.
 export default defineConfig({
-  site: 'https://eternalrichpresence.vercel.app',
+  site: 'https://eternalrichpresence.dev',
   output: 'static',
   trailingSlash: 'ignore',
   build: {

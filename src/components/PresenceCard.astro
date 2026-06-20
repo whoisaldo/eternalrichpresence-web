@@ -1,0 +1,40 @@
+---
+/**
+ * The "Now Playing" presence preview. The first chart track is painted at build
+ * time so it renders instantly (and without JS); Hero.astro embeds the full
+ * chart set and rotates the card visually — no audio, exactly like the mockup.
+ *
+ * The whole card is exposed to assistive tech as a single labelled image so the
+ * rotating text doesn't spam screen readers.
+ */
+import type { Track } from '../lib/apple';
+
+interface Props {
+  first: Track;
+}
+const { first } = Astro.props;
+---
+
+<div
+  class="presence"
+  role="img"
+  aria-label="Preview of a Discord Now Playing card showing live Apple Music chart art"
+>
+  <div class="presence-head"><span class="live"></span> Listening to Apple Music</div>
+  <div class="np" id="np">
+    <div class="cover" id="cover" style={`background-image:url("${first.art}")`}></div>
+    <div class="np-meta">
+      <div class="np-title" id="title">{first.name}</div>
+      <div class="np-artist" id="artist">{first.artist}</div>
+    </div>
+  </div>
+  <div class="bar">
+    <div class="bar-track"><div class="bar-fill" id="barfill"></div></div>
+    <div class="bar-times"><span>1:24</span><span>3:47</span></div>
+  </div>
+  <div class="np-btns">
+    <span class="btn">Listen on Spotify</span>
+    <span class="btn btn-primary">Listen Along</span>
+  </div>
+  <p class="src-note">Live preview · today's Apple Music chart</p>
+</div>

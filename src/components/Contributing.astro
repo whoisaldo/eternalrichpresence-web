@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { LINKS } from '../lib/site';
+---
+
+<div class="contrib">
+  <div class="wrap contrib-in">
+    <div>
+      <h3>Built in the open</h3>
+      <p>
+        Spotted a bug, want another music source, or have an idea? Issues and
+        pull requests are welcome — the whole thing is source-available on
+        GitHub.
+      </p>
+    </div>
+    <div class="contrib-links">
+      <a class="btn" href={LINKS.issues} target="_blank" rel="noopener">Report an issue</a>
+      <a class="btn" href={LINKS.contributing} target="_blank" rel="noopener">Contributing guide</a>
+      <a class="btn" href={LINKS.discord} target="_blank" rel="noopener">
+        <Icon name="discord" /> Join the Discord
+      </a>
+      <a class="btn" href={LINKS.github} target="_blank" rel="noopener">
+        <Icon name="github" /> Star on GitHub
+      </a>
+    </div>
+  </div>
+</div>

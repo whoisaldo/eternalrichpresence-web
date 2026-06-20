@@ -1,0 +1,46 @@
+---
+import Icon from './Icon.astro';
+
+const FEATURES = [
+  {
+    icon: 'cover-art',
+    title: 'Real cover art',
+    body: 'The actual album artwork on your profile — extracted live and uploaded for Discord to show, not a generic icon.',
+  },
+  {
+    icon: 'listen-along',
+    title: 'Listen Along',
+    body: 'Friends click Join and follow your track in real time — across services, so a Spotify listener can ride along with Apple Music.',
+  },
+  {
+    icon: 'every-player',
+    title: 'Every player',
+    body: 'Apple Music and Spotify out of the box, plus anything that reports to Windows media controls — browsers, foobar, more.',
+  },
+  {
+    icon: 'tray',
+    title: 'Out of the way',
+    body: 'A quiet system-tray app with a negligible footprint. No window to babysit, no account, no subscription.',
+  },
+];
+---
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Why it's different</span>
+      <h2>A status that's actually in tune.</h2>
+    </div>
+    <div class="feat-grid">
+      {
+        FEATURES.map((f) => (
+          <div class="feat">
+            <div class="feat-ic"><Icon name={f.icon} /></div>
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

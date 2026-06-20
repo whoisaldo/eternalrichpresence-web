@@ -1,0 +1,130 @@
+---
+/**
+ * Landing "Downloads" block. Everything here is read back from GitHub Releases
+ * at build time — version, notes, the download asset, and the SHA-256 — so a
+ * newly-tagged release updates the page on the next build with no code change.
+ * If there's no release yet, it renders a "coming soon" state (never a fake
+ * version).
+ */
+import Icon from './Icon.astro';
+import { LINKS, ROUTES } from '../lib/site';
+import { formatSize, shortSha, type ReleasesData } from '../lib/github';
+
+interface Props {
+  data: ReleasesData;
+}
+const { data } = Astro.props;
+const latest = data.latest;
+const dl = latest?.download ?? null;
+const releasesPage = `${LINKS.github}/releases`;
+---
+
+<section id="releases">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Downloads</span>
+      <h2>Always the latest build.</h2>
+      <p>
+        The download below is pulled live from GitHub Releases — when a new
+        version is tagged, this page updates itself. No stale links, ever.
+      </p>
+    </div>
+
+    <div class="release">
+      <div class="rel-card">
+        {
+          data.available && latest ? (
+            <>
+              <div class="rel-top">
+                <span class="ver">{latest.tag}</span>
+                <span class="rel-date">{latest.dateMonthYear} · latest</span>
+              </div>
+              <h3>What's new</h3>
+              {latest.bodyHtml ? (
+                <div class="rel-notes notes" set:html={latest.bodyHtml} />
+              ) : (
+                <p style="color:var(--muted);font-size:14.5px;">
+                  See the full notes for this release on GitHub.
+                </p>
+              )}
+              <a class="rel-more" href={ROUTES.releases}>
+                Read the full release notes & history <Icon name="arrow-right" />
+              </a>
+
+              <div class="rel-actions">
+                {dl ? (
+                  <a
+                    class="btn btn-primary"
+                    style="width:100%; justify-content:center;"
+                    href={dl.url}
+                  >
+                    <Icon name="download-arrow" /> Download {dl.name}
+                  </a>
+                ) : (
+                  <a
+                    class="btn btn-primary"
+                    style="width:100%; justify-content:center;"
+                    href={latest.htmlUrl}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <Icon name="download-arrow" /> View release on GitHub
+                  </a>
+                )}
+                <p class="checksum" title={dl?.sha256 ? `SHA-256: ${dl.sha256}` : undefined}>
+                  {dl?.sha256 ? `SHA-256 · ${shortSha(dl.sha256)}` : 'SHA-256 · see releases page'}
+                  {dl?.sizeBytes ? ` · ${formatSize(dl.sizeBytes)}` : ''} · Windows 10/11 · 64-bit
+                </p>
+                <div class="warn">
+                  <Icon name="warn" />
+                  <p>
+                    Windows may warn about an unrecognized app — that's because
+                    the build isn't code-signed yet.{' '}
+                    <a href={ROUTES.verify}>Here's why, and how to verify the download.</a>
+                  </p>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div class="rel-top">
+                <span class="ver">Coming soon</span>
+                <span class="rel-date">no public build yet</span>
+              </div>
+              <h3>First release on the way</h3>
+              <div class="coming-soon">
+                <p>
+                  There's no tagged release yet. The moment one is published on
+                  GitHub, this page picks up the version, notes, download, and
+                  checksum automatically — nothing here is hardcoded.
+                </p>
+                <a class="btn" href={releasesPage} target="_blank" rel="noopener">
+                  Watch releases on GitHub <Icon name="arrow-right" />
+                </a>
+              </div>
+            </>
+          )
+        }
+      </div>
+
+      <div>
+        <div class="sec-head" style="margin-bottom:24px;">
+          <h2 style="font-size:24px;">How the download stays current</h2>
+          <p>
+            One source of truth. Tag a release on GitHub, CI builds the exe, and
+            the site reads it back through the GitHub API — version, notes, and
+            the file all update on their own.
+          </p>
+        </div>
+        <ul class="rel-list" style="gap:14px;">
+          <li>
+            <Icon name="check" /> Every prior version stays on the{' '}
+            <a href={ROUTES.releases} style="color:var(--accent);text-decoration:underline;">releases page</a>
+          </li>
+          <li><Icon name="check" /> Release notes come straight from the changelog</li>
+          <li><Icon name="check" /> Checksums published for every build</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,105 @@
+---
+import type { Track } from '../lib/apple';
+import { LINKS } from '../lib/site';
+import Icon from './Icon.astro';
+import PresenceCard from './PresenceCard.astro';
+
+interface Props {
+  tracks: Track[];
+  /** Where the primary CTA points (landing scrolls to the release card). */
+  downloadHref?: string;
+}
+const { tracks, downloadHref = '#releases' } = Astro.props;
+const first = tracks[0];
+
+// Embed the build-time chart set for the client to cycle. Escape "<" so a track
+// name can never break out of the <script> tag.
+const trackJson = JSON.stringify(tracks).replace(/</g, '\\u003c');
+---
+
+<header class="hero">
+  <div class="hero-bg">
+    <div class="red1"></div>
+    <div class="art" id="heroart" style={`background-image:url("${first.art}")`}></div>
+    <div class="scrim"></div>
+    <div class="scrim2"></div>
+  </div>
+  <div class="wrap hero-in">
+    <div>
+      <span class="eyebrow">Windows · Free · Open source</span>
+      <h1>What you're listening&nbsp;to, <span class="hl">live on Discord.</span></h1>
+      <p class="lede">
+        EternalRichPresence mirrors Apple Music and Spotify to your Discord
+        profile — real cover art, accurate progress, and Listen Along. A
+        lightweight tray app that stays out of your way.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={downloadHref}>
+          <Icon name="download" /> Download for Windows
+        </a>
+        <a class="btn" href={LINKS.github} target="_blank" rel="noopener">
+          <Icon name="github" /> View on GitHub
+        </a>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>Apple Music</b> + Spotify</span>
+        <span class="chip">Live cover art</span>
+        <span class="chip">Listen Along</span>
+        <span class="chip">Any player via SMTC</span>
+      </div>
+    </div>
+
+    <div class="card-stage">
+      <PresenceCard first={first} />
+    </div>
+  </div>
+
+  <script type="application/json" id="erp-tracks" set:html={trackJson} />
+  <script>
+    // Cycle the embedded Apple Music chart set — visual only, no audio, no fetch.
+    const dataEl = document.getElementById('erp-tracks');
+    let tracks: { name: string; artist: string; art: string }[] = [];
+    try {
+      tracks = JSON.parse(dataEl?.textContent || '[]');
+    } catch {
+      tracks = [];
+    }
+
+    if (Array.isArray(tracks) && tracks.length > 1) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const np = document.getElementById('np');
+      const cover = document.getElementById('cover');
+      const titleEl = document.getElementById('title');
+      const artistEl = document.getElementById('artist');
+      const bar = document.getElementById('barfill');
+      const heroArt = document.getElementById('heroart');
+      let i = 0;
+
+      const paint = (t: { name: string; artist: string; art: string }) => {
+        if (cover) cover.style.backgroundImage = `url("${t.art}")`;
+        if (heroArt) heroArt.style.backgroundImage = `url("${t.art}")`;
+        if (titleEl) titleEl.textContent = t.name;
+        if (artistEl) artistEl.textContent = t.artist;
+        if (!reduce && bar) {
+          // Restart the seek animation so it re-syncs with each track change.
+          bar.style.animation = 'none';
+          void bar.offsetWidth;
+          bar.style.animation = '';
+        }
+      };
+
+      // The first track is already painted server-side; only rotate when motion
+      // is allowed.
+      if (!reduce && np) {
+        setInterval(() => {
+          np.classList.add('fading');
+          setTimeout(() => {
+            i = (i + 1) % tracks.length;
+            paint(tracks[i]);
+            np.classList.remove('fading');
+          }, 420);
+        }, 3800);
+      }
+    }
+  </script>
+</header>

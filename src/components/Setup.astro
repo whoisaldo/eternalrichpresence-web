@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { ROUTES } from '../lib/site';
+
+const STEPS = [
+  {
+    n: '01',
+    title: 'Create a Discord app',
+    body: "Spin up a free application in the Discord Developer Portal and copy its Client ID. We'll show you exactly where to click.",
+  },
+  {
+    n: '02',
+    title: 'Paste it in setup',
+    body: "Launch the app, drop in your Client ID, and optionally connect Spotify. That's the whole configuration.",
+  },
+  {
+    n: '03',
+    title: 'Play something',
+    body: 'Start a track in Apple Music or Spotify. Your Discord profile lights up with the cover, the title, and the progress.',
+  },
+];
+---
+
+<section id="setup" style="padding-top:0;">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Setup</span>
+      <h2>Running in three steps.</h2>
+      <p>No account, no installer wizard. The first launch walks you through it.</p>
+    </div>
+    <div class="steps">
+      {
+        STEPS.map((s) => (
+          <div class="step">
+            <span class="n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div style="margin-top:32px;">
+      <a class="btn" href={ROUTES.setup}>
+        Read the full setup guide <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</section>

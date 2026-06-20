@@ -1,0 +1,83 @@
+---
+/**
+ * Inline SVG icons used across the site. Paths are taken verbatim from the
+ * design-reference mockup (plus a few additions for the new pages). Icons
+ * inherit `currentColor`; size is controlled by CSS (`svg { width/height }`).
+ */
+interface Props {
+  name: string;
+  class?: string;
+  /** Accessible label; when omitted the icon is aria-hidden (decorative). */
+  label?: string;
+}
+const { name, class: className, label } = Astro.props;
+
+type IconDef = { stroke?: boolean; sw?: number; fill?: string; inner: string };
+
+const ICONS: Record<string, IconDef> = {
+  // Brand play glyph
+  play: { fill: 'currentColor', inner: '<path d="M8 5v14l11-7z"/>' },
+  // Windows-tiles download glyph (nav + CTAs)
+  download: {
+    fill: 'currentColor',
+    inner:
+      '<path d="M3 5.5 10 4.5v7H3zM11 4.3 21 3v8.5H11zM3 12.5h7v7L3 18.5zM11 12.5h10V21l-10-1.3z"/>',
+  },
+  // Download arrow (release button)
+  'download-arrow': {
+    stroke: true,
+    inner: '<path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/>',
+  },
+  github: {
+    fill: 'currentColor',
+    inner:
+      '<path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>',
+  },
+  check: { stroke: true, sw: 2.5, inner: '<path d="M5 12l5 5L20 6"/>' },
+  warn: {
+    stroke: true,
+    inner:
+      '<path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>',
+  },
+  'arrow-right': { stroke: true, inner: '<path d="M5 12h14m-6-6 6 6-6 6"/>' },
+  'arrow-left': { stroke: true, inner: '<path d="M19 12H5m6 6-6-6 6-6"/>' },
+  shield: {
+    stroke: true,
+    inner: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M9 12l2 2 4-4"/>',
+  },
+  // Feature icons (verbatim from mockup)
+  'cover-art': {
+    stroke: true,
+    inner: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="3"/>',
+  },
+  'listen-along': {
+    stroke: true,
+    inner: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  },
+  'every-player': { stroke: true, inner: '<path d="M3 12h4l3 8 4-16 3 8h4"/>' },
+  tray: { stroke: true, inner: '<path d="M4 4h16v12H4z"/><path d="M2 20h20"/>' },
+  discord: {
+    fill: 'currentColor',
+    inner:
+      '<path d="M19.27 5.33A16.6 16.6 0 0 0 15.16 4l-.2.4a13 13 0 0 1 3.6 1.74 14.6 14.6 0 0 0-12.6 0A13 13 0 0 1 9.55 4.4L9.34 4A16.6 16.6 0 0 0 5.24 5.33C2.6 9.21 1.89 13 2.25 16.73a16.7 16.7 0 0 0 5.06 2.55l.38-.6c-.84-.31-1.63-.7-2.36-1.18l.6-.46a11.9 11.9 0 0 0 10.15 0l.6.46c-.73.48-1.52.87-2.36 1.18l.38.6a16.7 16.7 0 0 0 5.06-2.55c.42-4.3-.71-8.06-3-11.4ZM8.83 14.46c-.98 0-1.79-.9-1.79-2s.79-2 1.79-2 1.81.9 1.79 2c0 1.1-.79 2-1.79 2Zm6.34 0c-.98 0-1.79-.9-1.79-2s.79-2 1.79-2 1.81.9 1.79 2c0 1.1-.79 2-1.79 2Z"/>',
+  },
+};
+
+const icon = ICONS[name] ?? ICONS.play;
+const aria = label
+  ? { role: 'img', 'aria-label': label }
+  : { 'aria-hidden': 'true' };
+const strokeAttrs = icon.stroke
+  ? { fill: 'none', stroke: 'currentColor', 'stroke-width': String(icon.sw ?? 2) }
+  : { fill: icon.fill ?? 'currentColor' };
+---
+
+<svg
+  viewBox="0 0 24 24"
+  class={className}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  {...strokeAttrs}
+  {...aria}
+  set:html={icon.inner}
+/>

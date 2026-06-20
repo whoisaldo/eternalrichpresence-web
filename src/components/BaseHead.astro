@@ -1,0 +1,73 @@
+---
+/**
+ * <head> contents: SEO + Open Graph + Twitter meta, fonts, favicons.
+ * The site gets shared in Discord, so the unfurl has to look right — every page
+ * passes a real title/description and points at the static OG image.
+ */
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path of the current page, e.g. "/releases" — used for canonical + og:url. */
+  path?: string;
+  /** Public path to the OG/Twitter image. */
+  image?: string;
+}
+
+const {
+  title,
+  description = SITE.description,
+  path = '/',
+  image = SITE.ogImage,
+} = Astro.props;
+
+// Absolute URLs (Astro.site is set in astro.config.mjs).
+const canonical = new URL(path, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+
+// Full <title>; the home page uses the bare brand + tagline.
+const fullTitle =
+  path === '/' ? `${SITE.name} — ${SITE.tagline}` : `${title} · ${SITE.name}`;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="theme-color" content="#0c0406" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${SITE.name} — ${SITE.tagline}`} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={`${SITE.name} — ${SITE.tagline}`} />
+
+<!-- Favicons -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="mask-icon" href="/favicon.svg" color="#fa2d48" />
+
+<!-- Fonts (same families as the design reference) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>

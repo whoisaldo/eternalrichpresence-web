@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import { LINKS, ROUTES, SITE } from '../lib/site';
+
+interface Props {
+  active?: 'home' | 'releases' | 'setup';
+  /** Where the nav "Download" button points (landing scrolls to #releases). */
+  downloadHref?: string;
+}
+const { active = 'home', downloadHref = ROUTES.releases } = Astro.props;
+const cur = (k: Props['active']) => (active === k ? 'page' : undefined);
+---
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href={ROUTES.home} aria-label={`${SITE.name} home`}>
+      <span class="glyph"><Icon name="play" /></span>
+      {SITE.name}
+    </a>
+    <div class="nav-links">
+      <a href={ROUTES.releases} aria-current={cur('releases')}>Releases</a>
+      <a href={ROUTES.setup} aria-current={cur('setup')}>Setup</a>
+      <a href={LINKS.github} target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-primary" href={downloadHref}>
+        <Icon name="download" /> Download
+      </a>
+    </div>
+  </div>
+</nav>

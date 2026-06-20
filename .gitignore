@@ -23,3 +23,5 @@ Thumbs.db
 # downloaded build-time fonts for asset generation (re-fetched on demand;
 # the generated PNGs under public/ are committed)
 scripts/fonts/
+
+.vercel

@@ -1,0 +1,47 @@
+---
+/**
+ * The EternalRichPresence app mark — a gradient rounded square with equalizer
+ * bars (same artwork as the favicon / OG icon). Self-contained SVG with its own
+ * rounding and gradients, so it needs no wrapper background.
+ *
+ * Decorative by default (aria-hidden); pass `title` to expose it to AT.
+ */
+interface Props {
+  size?: number;
+  class?: string;
+  title?: string;
+}
+const { size = 28, class: className, title } = Astro.props;
+const a11y = title ? { role: 'img', 'aria-label': title } : { 'aria-hidden': 'true' };
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 512 512"
+  class={className}
+  {...a11y}
+>
+  <defs>
+    <linearGradient id="bm-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5865f2"></stop>
+      <stop offset="0.5" stop-color="#c43a86"></stop>
+      <stop offset="1" stop-color="#fa2d48"></stop>
+    </linearGradient>
+    <linearGradient id="bm-gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.30"></stop>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0"></stop>
+    </linearGradient>
+    <clipPath id="bm-sq"><rect width="512" height="512" rx="116"></rect></clipPath>
+  </defs>
+  <g clip-path="url(#bm-sq)">
+    <rect width="512" height="512" fill="url(#bm-bg)"></rect>
+    <rect x="126" y="256" width="44" height="120" rx="22" fill="#fff"></rect>
+    <rect x="198" y="156" width="44" height="220" rx="22" fill="#fff"></rect>
+    <rect x="270" y="216" width="44" height="160" rx="22" fill="#fff"></rect>
+    <rect x="342" y="126" width="44" height="250" rx="22" fill="#fff"></rect>
+    <rect width="512" height="256" fill="url(#bm-gloss)"></rect>
+    <rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="3"></rect>
+  </g>
+</svg>

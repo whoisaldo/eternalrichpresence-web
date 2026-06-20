@@ -167,6 +167,9 @@ footer { border-top: 1px solid var(--line); padding: 40px 0; }
 /* Active nav link state. */
 .nav-links a[aria-current="page"] { color: var(--text); }
 
+/* Brand mark (self-contained gradient icon; replaces the old .glyph wrapper). */
+.brand-mark { display: block; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.35); }
+
 /* Page header used on /releases and /setup. */
 .page-hero { position: relative; padding: 64px 0 32px; overflow: hidden; }
 .page-hero .hero-bg .red1 { background: radial-gradient(60% 90% at 88% 0%, var(--amred), transparent 58%), linear-gradient(160deg, #240611 0%, #140509 60%, #0c0406 100%); }

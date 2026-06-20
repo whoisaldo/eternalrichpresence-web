@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import BrandMark from './BrandMark.astro';
 import { LINKS, ROUTES, SITE } from '../lib/site';
 
 interface Props {
@@ -14,7 +15,7 @@ const cur = (k: Props['active']) => (active === k ? 'page' : undefined);
 <nav>
   <div class="wrap nav-in">
     <a class="brand" href={ROUTES.home} aria-label={`${SITE.name} home`}>
-      <span class="glyph"><Icon name="play" /></span>
+      <BrandMark size={28} class="brand-mark" />
       {SITE.name}
     </a>
     <div class="nav-links">

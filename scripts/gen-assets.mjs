@@ -61,6 +61,24 @@ const C = {
   live: '#4fe0a0',
 };
 
+// The EternalRichPresence app mark (gradient square + equalizer bars + gloss),
+// scaled/positioned for reuse as the brand glyph and the card cover.
+function mark(x, y, size, idx) {
+  const s = size / 512;
+  return `<g transform="translate(${x},${y}) scale(${s})">
+    <clipPath id="sq${idx}"><rect width="512" height="512" rx="116"/></clipPath>
+    <g clip-path="url(#sq${idx})">
+      <rect width="512" height="512" fill="url(#markBg)"/>
+      <rect x="126" y="256" width="44" height="120" rx="22" fill="#fff"/>
+      <rect x="198" y="156" width="44" height="220" rx="22" fill="#fff"/>
+      <rect x="270" y="216" width="44" height="160" rx="22" fill="#fff"/>
+      <rect x="342" y="126" width="44" height="250" rx="22" fill="#fff"/>
+      <rect width="512" height="256" fill="url(#markGloss)"/>
+      <rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="3"/>
+    </g>
+  </g>`;
+}
+
 function ogSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
@@ -88,9 +106,14 @@ function ogSvg() {
       <stop offset="0.55" stop-color="${C.bg}" stop-opacity="0"/>
       <stop offset="1" stop-color="${C.bg}" stop-opacity="0.9"/>
     </linearGradient>
-    <linearGradient id="glyph" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${C.ampink}"/>
-      <stop offset="1" stop-color="${C.amred}"/>
+    <linearGradient id="markBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5865f2"/>
+      <stop offset="0.5" stop-color="#c43a86"/>
+      <stop offset="1" stop-color="#fa2d48"/>
+    </linearGradient>
+    <linearGradient id="markGloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.30"/>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
 
@@ -101,8 +124,7 @@ function ogSvg() {
   <rect width="1200" height="630" fill="url(#botScrim)"/>
 
   <!-- brand -->
-  <rect x="80" y="72" width="52" height="52" rx="14" fill="url(#glyph)"/>
-  <path d="M101 88 L101 108 L118 98 Z" fill="#fff"/>
+  ${mark(80, 72, 52, 0)}
   <text x="148" y="107" font-family="Space Grotesk" font-weight="600" font-size="30" fill="${C.text}">EternalRichPresence</text>
 
   <!-- eyebrow -->
@@ -125,8 +147,7 @@ function ogSvg() {
     <circle cx="776" cy="200" r="5" fill="${C.live}"/>
     <text x="790" y="205" font-family="Inter" font-weight="500" font-size="13" letter-spacing="1.4" fill="${C.muted}">LISTENING TO APPLE MUSIC</text>
     <!-- cover -->
-    <rect x="772" y="228" width="96" height="96" rx="18" fill="url(#glyph)"/>
-    <path d="M806 252 L806 300 L842 276 Z" fill="#fff" fill-opacity="0.95"/>
+    ${mark(772, 228, 96, 1)}
     <!-- title / artist -->
     <text x="888" y="266" font-family="Space Grotesk" font-weight="600" font-size="22" fill="${C.text}">Now Playing</text>
     <text x="888" y="296" font-family="Inter" font-weight="400" font-size="16" fill="${C.muted}">Apple Music · Spotify</text>

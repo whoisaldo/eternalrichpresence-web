@@ -1,10 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EternalRichPresence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="EternalRichPresence">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ff5e6c"/>
-      <stop offset="1" stop-color="#fa2d48"/>
-    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5865f2"/><stop offset="0.5" stop-color="#c43a86"/><stop offset="1" stop-color="#fa2d48"/></linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.30"/><stop offset="0.5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="sq"><rect width="512" height="512" rx="116"/></clipPath>
   </defs>
-  <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <path d="M25 19 L25 45 L46 32 Z" fill="#fff"/>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <rect x="126" y="256" width="44" height="120" rx="22" fill="#fff"/>
+    <rect x="198" y="156" width="44" height="220" rx="22" fill="#fff"/>
+    <rect x="270" y="216" width="44" height="160" rx="22" fill="#fff"/>
+    <rect x="342" y="126" width="44" height="250" rx="22" fill="#fff"/>
+    <rect width="512" height="256" fill="url(#gloss)"/>
+    <rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="3"/>
+  </g>
 </svg>

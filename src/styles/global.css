@@ -195,10 +195,16 @@ footer { border-top: 1px solid var(--line); padding: 40px 0; }
 .notes em { color: var(--text); }
 .notes hr { border: none; border-top: 1px solid var(--line); margin: 22px 0; }
 .notes code { font-family: var(--mono); font-size: 0.86em; background: rgba(255,255,255,0.07); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
-.notes pre { font-family: var(--mono); font-size: 12.5px; line-height: 1.6; background: rgba(0,0,0,0.34); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 14px 0; overflow-x: auto; color: var(--muted); }
+.notes pre { font-family: var(--mono); font-size: 12.5px; line-height: 1.6; background: rgba(0,0,0,0.34); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 14px 0; overflow-x: auto; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
 .notes pre code { background: none; border: none; padding: 0; font-size: inherit; }
 .notes blockquote { border-left: 2px solid var(--glass-edge); padding-left: 14px; margin: 12px 0; color: var(--faint); }
 .notes img { max-width: 100%; border-radius: 12px; }
+
+/* Grid/flex items default to min-width:auto, so wide children (e.g. <pre> code
+   blocks in release notes) can blow out a column and push the layout off-center.
+   Let the tracks shrink and keep notes content contained. */
+.release > *, .changelog-item, .notes, .rel-notes { min-width: 0; }
+.notes pre, .notes table { max-width: 100%; }
 
 /* Landing release card: clamp the notes preview with a soft fade. */
 .rel-notes { position: relative; max-height: 224px; overflow: hidden; }
